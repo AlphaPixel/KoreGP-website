@@ -1,0 +1,65 @@
+# Normalize line endings: LF in the repo, native in the working tree.
+# Combined with core.autocrlf=true on Windows this keeps diffs clean
+# across contributors on Windows, Linux and macOS.
+* text=auto
+
+# Explicit text types (content of the site)
+*.md        text eol=lf diff=markdown
+*.markdown  text eol=lf diff=markdown
+*.html      text eol=lf diff=html
+*.htm       text eol=lf diff=html
+*.css       text eol=lf diff=css
+*.js        text eol=lf
+*.mjs       text eol=lf
+*.json      text eol=lf
+*.jsonc     text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.xml       text eol=lf
+*.svg       text eol=lf
+*.txt       text eol=lf
+*.toml      text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# Files that must keep CRLF even on Linux checkouts
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+# Files that must keep LF even on Windows checkouts
+*.sh   text eol=lf
+*.bash text eol=lf
+
+# Binary assets: never diff, never munge line endings
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.avif binary
+*.ico  binary
+*.pdf  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.otf  binary
+*.eot  binary
+*.zip  binary
+*.gz   binary
+*.7z   binary
+*.mp4  binary
+*.webm binary
+
+# GitHub Linguist: don't let vendored libs skew the language stats,
+# and don't count generated output as authored source.
+vendor/**   linguist-vendored
+lib/vendor/** linguist-vendored
+dist/**     linguist-generated
+_site/**    linguist-generated
+
+# Keep these out of `git archive` / release tarballs
+.gitattributes export-ignore
+.gitignore     export-ignore
+.editorconfig  export-ignore
+.github/       export-ignore
