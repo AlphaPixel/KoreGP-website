@@ -1,1 +1,78 @@
-*.tmp  
+# ---- Temporary / scratch ----
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+*.rej
+*~
+
+# ---- Windows ----
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+*.stackdump
+
+# ---- macOS / Linux (contributors on other platforms) ----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.fuse_hidden*
+.directory
+.nfs*
+
+# ---- Editors / IDEs ----
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+*.suo
+*.user
+*.sln.docstates
+.idea/
+*.iml
+*.sublime-workspace
+*.code-workspace
+
+# ---- Node tooling (build scripts, local preview server, linters) ----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.npm/
+.eslintcache
+.stylelintcache
+.cache/
+.parcel-cache/
+
+# ---- Static site generator output ----
+# Nothing here is authored by hand; the published site is built from
+# the markdown sources in the repo root.
+_site/
+dist/
+build/
+out/
+.jekyll-cache/
+.jekyll-metadata
+
+# ---- Environment / secrets ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ---- Logs / coverage ----
+*.log
+logs/
+coverage/
