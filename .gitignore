@@ -76,3 +76,6 @@ out/
 *.log
 logs/
 coverage/
+
+# local
+claude-local-*
