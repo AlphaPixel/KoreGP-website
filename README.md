@@ -8,6 +8,8 @@ Yes, some of this document was partially written using AI tools. That doesn't ma
 
 Reference target: AMD RDNA2+ through Mesa RADV internals, NVidia NVK through Mesa, on Linux.
 
+**Update, 2026-11-24:** a test implementation on NVK now runs on an RTX 2070 SUPER. [What it found](docs/nvk-test-implementation.md), with measured costs against NVK's Vulkan path and suggested edits to this document.
+
 ---
 
 ## 1. KGP WTF?
