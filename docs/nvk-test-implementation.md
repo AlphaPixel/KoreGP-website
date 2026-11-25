@@ -14,12 +14,12 @@ Code: <https://github.com/AlphaPixel/KoreGP>, branch `nvk-test-implementation`.
 |---|---|---|
 | M0, compute | devices, `kgpMalloc`, SPIR-V through NAK with the root convention, dispatch and indirect dispatch, barriers, timeline semaphores | Yes. Saxpy and prefix sum are correct, and both halves of the exit test are met (cost below). |
 | M1, textures | texture layouts over caller memory, descriptor writers, texture and sampler heaps, GPU-side copies, `KGP_HAZARD_DESCRIPTORS` | Yes, including the exit test: descriptors written into the heap by a compute shader and used by the next dispatches. |
-| M2, raster | graphics pipelines, render passes, depth and stencil, blend and depth-stencil state objects, direct, indirect and multi draws, presentation | Yes: triangles, a heap texture sampled in a pixel shader, depth, stencil, a multi-draw whose arguments and per-draw root pointers are read on the GPU, and 120 frames on a monitor. The exit test as written (the no_api examples ported) was not attempted. |
-| M3 | the validation mode; multi-draw-indirect; mesh shaders (without task shaders); split barriers | Yes, the shader-side heap bounds checks included. A command buffer waiting on a value in memory stays blocked until the CPU writes it. |
+| M2, raster | graphics pipelines, render passes, depth and stencil, blend and depth-stencil state objects, direct, indirect and multi draws, presentation | Yes: triangles, a heap texture sampled in a pixel shader, depth, stencil, a multi-draw whose arguments and per-draw root pointers are read on the GPU, and 120 frames on a monitor. The exit test as written passes: no_api's three examples (hello_triangle, hello_compute, playground) ported, correct headless and on a monitor. Its build script names a fourth, sponza, that is not in its repository. |
+| M3 | the validation mode; multi-draw-indirect; mesh and task shaders; split barriers | Yes, the shader-side heap bounds checks included. A command buffer waiting on a value in memory stays blocked until the CPU writes it. |
 | beyond the proposal | MSAA at 2, 4 and 8 samples | Yes. There is no resolve call: a shader reads the samples through the texture heap. |
-| not built | task shaders, Wayland and X11 surfaces, the SDK and loader, the layered Vulkan backend, an AMD backend | |
+| not built | Wayland and X11 surfaces, the SDK and loader, the layered Vulkan backend, an AMD backend | |
 
-The API is 50 entry points in a 680-line header. The frontend is about 7,000 lines of C; it links NVK and calls into it where it can, so it copies little. 81 tests run without hardware on Mesa's DRM shim. The hardware suite ran in thirteen sessions between 2026-11-21 and 2026-11-24, and everything in the tree has passed on the GPU. Beyond the table, that covers depth bias, blend constants, colour write masks, a second colour target, render targets in sRGB and three float formats, copies to mip levels, array layers and 3D textures, and draw arguments written by a compute shader in the same command buffer.
+The API is 50 entry points in a 690-line header. The frontend is about 7,100 lines of C; it links NVK and calls into it where it can, so it copies little. 88 tests run without hardware on Mesa's DRM shim. The hardware suite ran in fourteen sessions between 2026-11-21 and 2026-11-25, and everything in the tree has passed on the GPU. Beyond the table, that covers depth bias, blend constants, colour write masks, a second colour target, render targets in sRGB and three float formats, copies to mip levels, array layers and 3D textures, and draw arguments written by a compute shader in the same command buffer.
 
 ## What it costs
 
@@ -30,7 +30,7 @@ CPU time to record, in release builds of the same Mesa tree on the same machine.
 | Record a dispatch | 83 – 140 ns | 429 – 838 ns | on the card |
 | Record a dispatch | 41 – 53 ns, 240 instructions | 330 – 350 ns, 3308 instructions | offline, on the DRM shim |
 | Record a draw with its own root pointers | 58 – 73 ns | 99 – 110 ns | on the card, 100 draws per command buffer |
-| Record a draw with its own root pointers | 27 ns | 63 ns | on the card, 1000 draws per command buffer (one run) |
+| Record a draw with its own root pointers | 27 and 40 ns | 63 and 74 ns | on the card, 1000 draws per command buffer (two sessions, one run each) |
 | Record a draw with its own root pointers | 19 ns, 218 instructions | 59 ns, 660 instructions | offline, 1000 draws per command buffer |
 | Submit a command buffer | 8 – 13 µs | the same | on the card |
 
@@ -101,7 +101,7 @@ Labels D1 to D10 refer to `docs/nvk-mapping.md` in the code repository, which ha
 - It is one card, one kernel driver (nouveau with GSP firmware) and one machine.
 - It says nothing about AMD, the proposal's reference target.
 - There is no ZCULL, which NVK has, so GPU time on depth-heavy scenes is not comparable yet.
-- A wait that is never satisfied was not tried; the longest a channel was held was 200 ms.
+- A wait that is never satisfied costs the process its device: after 10 s nouveau kills the channel, the waiting command buffer reports as complete without having run, and the next submit fails. Other processes are unaffected.
 - It is a test implementation. It refuses GPUs older than Turing, and its presentation path has only been exercised without a compositor.
 
 ## Where to look
